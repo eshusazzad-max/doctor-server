@@ -2,6 +2,10 @@ const express = require("express");
 
 const cors = require("cors");
 
+const jwt = require("jsonwebtoken");
+
+const cookieParser = require("cookie-parser");
+
 require("dotenv").config();
 
 const {
@@ -16,6 +20,8 @@ const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
+
+app.use(cookieParser());
 
 app.use(express.json());
 
@@ -46,9 +52,28 @@ async function run() {
     await client.connect();
 
     const appointmentsCollection =
+
       client.db("doctorDB").collection("appointments");
 
     console.log("MongoDB Connected ");
+
+    app.post("/jwt", async (req, res) => {
+
+     const user = req.body;
+
+     const token = jwt.sign(
+      user,
+      process.env.ACCESS_TOKEN_SECRET,
+     {
+
+       expiresIn: "1h",
+
+     }
+   );
+
+   res.send({ token });
+
+ });
 
     // POST Appointment
     app.post("/appointments", async (req, res) => {
