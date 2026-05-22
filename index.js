@@ -58,6 +58,15 @@ async function run() {
 
     });
 
+    app.get("/appointments", async (req, res) => {
+
+      const result =
+        await appointmentsCollection.find().toArray();
+
+      res.send(result);
+
+    });
+
   } catch (error) {
 
     console.log(error);
