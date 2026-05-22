@@ -89,12 +89,28 @@ async function run() {
 
     app.get("/appointments", async (req, res) => {
 
-      const result =
-        await appointmentsCollection.find().toArray();
+       const email = req.query.email;
 
-      res.send(result);
+        let query = {};
 
-    });
+        if (email) {
+
+          query = {
+
+           userEmail: email,
+
+          };
+
+        }
+
+       const result =
+         await appointmentsCollection
+          .find(query)
+          .toArray();
+
+       res.send(result);
+
+      });
 
     app.delete("/appointments/:id", async (req, res) => {
 
