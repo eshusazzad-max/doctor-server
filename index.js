@@ -4,7 +4,11 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const {
+  MongoClient,
+  ServerApiVersion,
+  ObjectId,
+} = require("mongodb");
 
 const app = express();
 
@@ -66,6 +70,52 @@ async function run() {
       res.send(result);
 
     });
+
+    app.delete("/appointments/:id", async (req, res) => {
+
+       const id = req.params.id;
+
+       const query = {
+
+         _id: new ObjectId(id),
+
+       };
+
+       const result =
+         await appointmentsCollection.deleteOne(query);
+
+       res.send(result);
+
+     });
+
+
+     app.put("/appointments/:id", async (req, res) => {
+
+       const id = req.params.id;
+
+       const updatedAppointment = req.body;
+
+       const query = {
+
+          _id: new ObjectId(id),
+
+      };
+
+       const updateDoc = {
+
+         $set: updatedAppointment,
+
+      };
+
+       const result =
+         await appointmentsCollection.updateOne(
+         query,
+         updateDoc
+      );
+
+       res.send(result);
+
+     });
 
   } catch (error) {
 
